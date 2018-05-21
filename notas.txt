@@ -1,0 +1,8 @@
+Esto instala todas las dependencias, framworks, helper files. Todo lo necesario para ejecutar la aplicacióm node
+
+npm install
+
+Archivos .pug son los template que se usan para generan el html
+
+
+Conectarse a la base de datos a traves de "mongodb GUI" (llamada mongodb compass). Lo analogo a phpmyadmin para MySQL
