@@ -15,7 +15,18 @@ router.get('/', (req, res) => {
   // "req.query" se encarga de los parametros
 
   // res.send(`Nombre: ${req.query.name} - Edad ${req.query.age}`);
-  res.json(req.query);
+  // res.json(req.query);
+
+  // Para mostrar un template:
+  // render('nombre del template', 'variable local')
+  // 'variable local opcional' permite pasar informacion al template
+  res.render('hello', {
+    name: wes,
+    // dog: 'snikers',
+
+    // forma dinamica
+    dog: req.query.name,
+  });
 });
 
 // "req.params" accede a los campos variables de la url:

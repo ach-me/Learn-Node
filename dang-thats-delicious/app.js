@@ -17,6 +17,9 @@ const errorHandlers = require('./handlers/errorHandlers');
 const app = express();
 
 // view engine setup
+
+// pug=jade. Es un motor de templates
+// En la carpeta "view" se encuentran todos los archivos template tipo .pug
 app.set('views', path.join(__dirname, 'views')); // this is the folder where we keep our pug files
 app.set('view engine', 'pug'); // we use the engine pug, mustache or EJS work great too
 

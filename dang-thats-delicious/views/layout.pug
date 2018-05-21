@@ -6,7 +6,9 @@ html
     link(rel="shortcut icon" type="image/png" href="/images/icons/doughnut.png")
     meta(name="viewport" content="width=device-width, initial-scale=1")
   body
+    //- un 'block' es una seccion del sitio que puede ser llenado con un template
     block header
+      //- Este es el contenido por default que se mostrara, a menos que se genere otro desde otro archivo pug
       header.top
         nav.nav
           .nav__section.nav__section--pages
@@ -47,7 +49,9 @@ html
                   p.flash__text!= message
                   button.flash__remove(onClick="this.parentElement.remove()") &times;
     .content
+      //- Aqui ira un bloque
       block content
+        p This is the default
 
     block scripts
       script(src=`https://maps.googleapis.com/maps/api/js?key=${process.env.MAP_KEY}&libraries=places`)

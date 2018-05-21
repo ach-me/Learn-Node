@@ -1,0 +1,30 @@
+//- pug no usa tags de apertura y cierre como html
+//- Solo se indica el tipo de tag al principio
+//- Para anidar elementos, hay que aplicar identacion debajo del elemento
+//- Con #{} se referencia una variable
+
+//- .wrapper.ohno
+//-   //- escribir javascript
+//-   - const upDog = dog.toUpperCase();
+
+//-   p.hello My dog name is #{upDog}
+//-   span#yo Yo!!
+//-   img.dog(src="dog.jpg" alt=`Dog ${dog}`)
+
+//- h2 
+//-   | Hello
+//-   em How are you?
+
+
+
+//- Para usar el layout hecho en el archivo "layout.pug" hay que extender el layout y usar el bloque deseado
+
+extends layout
+
+block header
+  //- Esto reemplazara al contenido default del bloque "header" del archivo "layput.pug"
+  h2 Yo!
+
+block content
+  //- Esta seccion reemplazara a lo que haya en el bloque "content" en el archivo "layout.pug"
+  p Esto sobre escribe al default!!
