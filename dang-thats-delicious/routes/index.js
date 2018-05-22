@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 
 // Formas de acceder a los datos de la URL
@@ -19,13 +20,15 @@ router.get('/', (req, res) => {
 
   // Para mostrar un template:
   // render('nombre del template', 'variable local')
-  // 'variable local opcional' permite pasar informacion al template
+  // 'variable local' permite pasar informacion al template
   res.render('hello', {
     name: wes,
     // dog: 'snikers',
 
     // forma dinamica
     dog: req.query.name,
+
+    title: 'I love food'
   });
 });
 

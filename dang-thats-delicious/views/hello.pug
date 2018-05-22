@@ -21,10 +21,13 @@
 
 extends layout
 
-block header
+//- block header
   //- Esto reemplazara al contenido default del bloque "header" del archivo "layput.pug"
   h2 Yo!
 
 block content
   //- Esta seccion reemplazara a lo que haya en el bloque "content" en el archivo "layout.pug"
-  p Esto sobre escribe al default!!
+  //- p Esto sobre escribe al default!!
+
+  //- "h" esta definido en el archivo "app", "app.use"
+  h2 Sale ends #{h.moment().endOf('day').fromNow()}

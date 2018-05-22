@@ -1,5 +1,7 @@
 /*
   This is a file of data and helper functions that we can expose and use in our templating function
+
+  Este archivo se utiliza para poner todos los modulos helpers necesarios en la aplicacion y se definen todos los datos que se quiere que esten disponibles siempre
 */
 
 // FS is a built in module to node that let's us read files from the system we're running on
