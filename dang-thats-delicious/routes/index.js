@@ -46,5 +46,5 @@ const storeController = require('../controllers/storeController');
 // Primero toma el control el middleware, con la sentencia "next()"
 // le pasa el control al siguiente parametro
 // primero realiza el middleware, luego muestra el homepage
-router.get('/', storeController.myMiddleware, storeController.homePage);
+router.get('/', storeController.homePage);
 module.exports = router;
