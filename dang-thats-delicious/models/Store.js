@@ -34,7 +34,7 @@ storeSchema.pre('save', function (next) {
   }
   // tomar el nombre, pasarlo por el paquete slug
   this.slug = slug(this.name);
-  next(); 
+  next();
 });
 
 // Si lo que se importara es lo principal

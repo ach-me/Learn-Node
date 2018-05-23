@@ -47,4 +47,9 @@ const storeController = require('../controllers/storeController');
 // le pasa el control al siguiente parametro
 // primero realiza el middleware, luego muestra el homepage
 router.get('/', storeController.homePage);
+router.get('/add', storeController.addStore);
+
+// Cuando se envia por POST en la siguiente direccion
+// Agregar el store
+router.post('/add', storeController.createStore);
 module.exports = router;

@@ -16,3 +16,16 @@ exports.homePage = (req, res) => {
   console.log(req.name);
   res.render('index');
 };
+
+exports.addStore = (req, res) => {
+  // Mostrar template
+  res.render('editStore', {
+    title: 'Add Store'
+  });
+};
+
+exports.createStore = (req, res) => {
+  // "req.body" contiene toda la informacion enviada
+  // en el formulario
+  // res.json(req.body);
+};

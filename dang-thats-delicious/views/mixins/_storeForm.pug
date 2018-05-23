@@ -1,0 +1,27 @@
+//- Aqui se define cómo luce el mixin
+
+mixin storeForm(store = {})
+  //- "store.name" contiene el valor que le hayan pasado al mixin al invocarlo
+  //- p Store: #{store.name}
+
+  form(action="/add" method="POST" class="card")
+    //- los atributos "name" deben coincidir con los definidos en el schema definido en "/models/Store.js"
+    label(for="name") Name
+    input(type="text" name="name")
+    label(for="description") Description
+    textarea(name="description")
+
+    //- Mostrar tags predefinidos
+    //- Generar un array de tags y loopear por cada uno
+    //- Para eso es necesario escribir JS. El principio de linea debe empezar con "-"
+    - const choices = ['Wifi', 'Open Late', 'Family Friendly', 'Vegetarian', 'Licensed']
+
+    ul.tags
+      //- Loopear los elementos del array
+      //- Para lopear en "pug": each x in y
+      //- "y" es el array, "x" es cada elemento
+      each choice in choices
+        .tag.tag__choice
+          input(type="checkbox" id=choice value=choice name="tags")
+          label(for="choice") #{choice}
+    input(type="submit" value="Save -<" class="button")

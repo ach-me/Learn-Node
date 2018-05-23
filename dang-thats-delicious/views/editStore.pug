@@ -1,0 +1,22 @@
+extends layout
+
+//- Si se quiere usar un mixin hay que importarlo
+include mixins/_storeForm
+//- Esto hace que todos los mixins creados en ese archivo, este
+//- disponibles como funciones en este archivo
+
+block content
+  .inner
+    //- h2 #{title}
+    h2= title
+
+    //- Se necesita agregar un formulario para editar el store
+    //- En lugar de agregar la estructura en este template,
+    //- se definira en otro archivo y se traera aqui.
+    //- De esta manera se lo puede utilizar como un componente reutilizable
+    //- Para ello se usa un "mixin", es como una funcion de javascript, a la que
+    //- se le pasan datos y retorna una estructura html
+
+    //- Usar el mixin
+    //- Se pueden pasar datos como parametros
+    +storeForm({ name: 'Tim Hortons' })
