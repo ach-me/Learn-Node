@@ -23,8 +23,18 @@ const app = express();
 app.set('views', path.join(__dirname, 'views')); // this is the folder where we keep our pug files
 app.set('view engine', 'pug'); // we use the engine pug, mustache or EJS work great too
 
+
+
+// Cada vez que aparece "app.use", se usara una middleware global
+// Antes incluso de ejecutarse el ruteo, se van a ejecutar todos
+// los middlewares globales
+
 // serves up static files from the public folder. Anything in public/ will just be served up as the file it is
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+// Cada vez que se envia datos en un formulario, los datos estaran
+// disponibles en el objeto req.body
 
 // Takes the raw requests and turns them into usable properties on req.body
 app.use(bodyParser.json());
@@ -33,6 +43,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Exposes a bunch of methods for validating data. Used heavily on userController.validateRegister
 app.use(expressValidator());
 
+// Para manejar datos de login con cookies
 // populates req.cookies with any cookies that came along with the request
 app.use(cookieParser());
 
@@ -68,12 +79,17 @@ app.use((req, res, next) => {
   next();
 });
 
+
+// Cuando se acceda a '/', ir al archivo "routes"
 // After allllll that above middleware, we finally handle our own routes!
 app.use('/', routes);
 
 // If that above routes didnt work, we 404 them and forward to error handler
 app.use(errorHandlers.notFound);
 
+
+
+// Si no encuentra la direccion ingresada
 // One of our error handlers will see if these errors are just validation errors
 app.use(errorHandlers.flashValidationErrors);
 
