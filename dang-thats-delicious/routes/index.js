@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const storeController = require('../controllers/storeController');
+const { catchErrors } = require('../handlers/errorHandlers'); // Object destructuring. Importa solo el metodo de igual nombre
 
 // Formas de acceder a los datos de la URL
 
@@ -51,5 +52,6 @@ router.get('/add', storeController.addStore);
 
 // Cuando se envia por POST en la siguiente direccion
 // Agregar el store
-router.post('/add', storeController.createStore);
+router.post('/add', catchErrors(storeController.createStore));
+
 module.exports = router;
