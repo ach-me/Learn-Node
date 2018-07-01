@@ -44,7 +44,8 @@ const { catchErrors } = require('../handlers/errorHandlers'); // Object destruct
 // Primero toma el control el middleware, con la sentencia "next()"
 // le pasa el control al siguiente parametro
 // primero realiza el middleware, luego muestra el homepage
-router.get('/', storeController.homePage);
+router.get('/', catchErrors(storeController.getStores));
+router.get('/stores', catchErrors(storeController.getStores));
 router.get('/add', storeController.addStore);
 
 // Cuando se envia por POST en la siguiente direccion

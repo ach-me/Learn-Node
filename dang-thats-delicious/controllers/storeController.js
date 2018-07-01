@@ -69,3 +69,10 @@ exports.createStore = async (req, res) => {
   //   console.log('Lablablabla');
   // }
 };
+
+exports.getStores = async (req, res) => {
+  // query db for a list of all stores
+  // "find()" devuelve una promesa, entonces se espera a que termine con "await"
+  const stores = await Store.find();
+  res.render('stores', { title: 'Stores', stores });
+};
