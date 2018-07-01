@@ -4,11 +4,11 @@
 // "next" es necesario en los middleware
 // exports.myMiddleware = (req, res, next) => {
 //   req.name = 'Wes';
-//   // res.cookie('name', 'Wes is cool', { maxAge: 90000 });
-//   // if (req.name === 'Wes') {
-//   //   throw Error('LASKDLAKSLDK');
-//   // }
-//   // Terminé con este middleware, seguir con lo que sigue
+//   res.cookie('name', 'Wes is cool', { maxAge: 90000 });
+//   if (req.name === 'Wes') {
+//     throw Error('LASKDLAKSLDK');
+//   }
+//   Terminé con este middleware, seguir con lo que sigue
 //   next();
 // };
 
@@ -24,14 +24,13 @@ const Store = mongoose.model('Store');
 // module.exports = mongoose.model('Store', storeSchema);
 
 exports.homePage = (req, res) => {
-  console.log(req.name);
   res.render('index');
 };
 
 exports.addStore = (req, res) => {
   // Mostrar template
   res.render('editStore', {
-    title: 'Add Store'
+    title: 'Add Store',
   });
 };
 
@@ -42,7 +41,7 @@ exports.createStore = async (req, res) => {
 
   // 'Store' recibe las propiedades con las que fue definido
   // en el scheme del archivo 'Store.js'
-  const store = new Store(req.body);
+  const store = await new Store(req.body).save();
 
   // Lanza una conexion a la base de datos mongodb y guarda los datos
   // Devuelve los datos guardados o un error
@@ -53,6 +52,20 @@ exports.createStore = async (req, res) => {
   // Se pueden utilizar promesas porque se indico a mongoose en el
   // archivo 'start.js':
   // mongoose.Promise = global.Promise
-  await store.save();
-  res.redirect('/');
+
+  // "flash" esta disponible porque se establecio en "app.js": app.use(flash())
+  req.flash('success', `Successfully created ${store.name}. Care to leave a review?`);
+  res.redirect(`/store/${store.slug}`);
+
+  /**
+   * ! esta funcion podria resolverse de esta manera, pero para manejar todos los try catch de la aplicacion se declaró una función que toma como parámetro una función y manejará desde allí los errores. "errorHandlers" en el archivo catchErrors.js
+   *
+   */
+  // try {
+  //   const store = new Store(req.body);
+  //   await store.save();
+  //   res.redirect('/');
+  // } catch (error) {
+  //   console.log('Lablablabla');
+  // }
 };

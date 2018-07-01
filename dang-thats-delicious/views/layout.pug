@@ -42,6 +42,7 @@ html
       if locals.flashes
         .inner
           .flash-messages
+            //- Generar un array con los nombres de las propiedades del objeto "locals.flashes" para usarlo como parte del nombre de las clases de los mensajes
             - const categories = Object.keys(locals.flashes)
             each category in categories
               each message in flashes[category]
