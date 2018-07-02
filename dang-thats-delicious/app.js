@@ -36,6 +36,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Takes the raw requests and turns them into usable properties on req.body
 // Cada vez que se envien datos por formulario, esto permite guardarlos en req.body
 app.use(bodyParser.json());
+
+// Esto permite tener inputs con nested data
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Exposes a bunch of methods for validating data like email address. Used heavily on userController.validateRegister
