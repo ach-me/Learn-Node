@@ -51,5 +51,7 @@ router.get('/add', storeController.addStore);
 // Cuando se envia por POST en la siguiente direccion
 // Agregar el store
 router.post('/add', catchErrors(storeController.createStore));
+router.post('/add/:id', catchErrors(storeController.updateStore));
+router.get('/stores/:id/edit', catchErrors(storeController.editStore));
 
 module.exports = router;
