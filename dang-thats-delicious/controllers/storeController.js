@@ -91,6 +91,10 @@ exports.editStore = async (req, res) => {
 };
 
 exports.updateStore = async (req, res) => {
+  // Set the location data to be a 'Point'
+  // Esto es necesario, ya que al actualizar no se reflejan las propiedades puestas como default
+  req.body.location.type = 'Point';
+
   // 1. Find and update store
   // findOneAndUpdate(query, data, options)
   // req.body contiene todos los datos enviados en el formulario
@@ -102,9 +106,7 @@ exports.updateStore = async (req, res) => {
   // 2. Redirect them the store and tell it worked
   req.flash(
     'success',
-    `Successfully updated <strong>${store.name}</strong>. <a href="/stores/${
-      store.slug
-    }">View Store -></a>`
+    `Successfully updated <strong>${store.name}</strong>. <a href="/stores/${store.slug}">View Store -></a>`
   );
   res.redirect(`/stores/${store._id}/edit`);
 };
