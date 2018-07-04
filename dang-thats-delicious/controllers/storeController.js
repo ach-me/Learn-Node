@@ -156,3 +156,13 @@ exports.updateStore = async (req, res) => {
   );
   res.redirect(`/stores/${store._id}/edit`);
 };
+
+exports.getStoreBySlug = async (req, res, next) => {
+  // Query the db for the requested store
+  const store = await Store.findOne({ slug: req.params.slug });
+  // Si la query no encuentra nada, retorna "null"
+  if (!store) return next();
+  // "next" hara que se ejecute lo siguiente a "app.use('/', routes)" declara en "app.js"
+  // En este caso se ejecutará "app.use(errorHandlers.notFound)"
+  res.render('store', { store, title: store.name });
+};
