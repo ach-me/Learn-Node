@@ -47,7 +47,7 @@ const storeSchema = new mongoose.Schema({
 });
 
 // Antes de guardar el store
-storeSchema.pre('save', function(next) {
+storeSchema.pre('save', async function(next) {
   // se usa sintaxis "function()" para poder acceder a "this"
   // "this" será el Store siende guardado
 
@@ -61,11 +61,16 @@ storeSchema.pre('save', function(next) {
   }
   // tomar el nombre, pasarlo por el paquete slug
   this.slug = slug(this.name);
+  // Find other stores with same slug
+  // RegExp que busque un patron en la base
+  const slugRegEx = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, 'i');
+  // "this.constructor" es igual a "Store" al momento ejecutarse esta linea
+  // Se usa eso porque el modelo está siendo creado a esta altura
+  const storesWithSlug = await this.constructor.find({ slug: slugRegEx });
+  if (storesWithSlug.length) {
+    this.slug = `${this.slug}-${storesWithSlug.length + 1}`;
+  }
   next();
-
-  /**
-   * TODO: make more resiliant so slugs are unique
-   */
 });
 
 // Si lo que se importara es lo principal
