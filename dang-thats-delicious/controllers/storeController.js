@@ -23,6 +23,30 @@ const Store = mongoose.model('Store');
 // La asignacion 'Store' sale del archivo 'Store.js'
 // module.exports = mongoose.model('Store', storeSchema);
 
+// Paquete necesario para el manejo de la transaccion de archivos
+const multer = require('multer');
+
+// Paquete para cambiar tamaño de las fotos
+const jimp = require('jimp');
+
+// Paquete para hacer nombres de archivos unicos
+const uuid = require('uuid');
+
+const multerOptions = {
+  // donde sera guardado el archivo
+  storage: multer.memoryStorage(),
+  // que tipo de archivos estan permitidos
+  fileFilter(req, file, next) {
+    // Verificar el tipo de archivo
+    const isPhoto = file.mimetype.startsWith('image/');
+    if (isPhoto) {
+      next(null, true);
+    } else {
+      next({ message: "That file type isn't allowed" }, false);
+    }
+  },
+};
+
 exports.homePage = (req, res) => {
   res.render('index');
 };
@@ -32,6 +56,28 @@ exports.addStore = (req, res) => {
   res.render('editStore', {
     title: 'Add Store',
   });
+};
+
+// Middleware
+// Guardar en la memoria del server (no guarda la foto en la base de datos)
+exports.upload = multer(multerOptions).single('photo');
+
+exports.resize = async (req, res, next) => {
+  // check if there is no new file to resize
+  if (!req.file) {
+    next(); // skip to the next middleware
+  }
+  // guardar la extension de la propiedad "mimetype" del objeto "file"
+  const extension = req.file.mimetype.split('/')[1];
+  // Generar un nombre unico y guardarlo en los datos que seran enviados en "body.post"
+  req.body.photo = `${uuid.v4()}.${extension}`;
+  // Cambiar tamaño de la foto
+  const photo = await jimp.read(req.file.buffer);
+  await photo.resize(800, jimp.AUTO);
+  // Guardarla
+  await photo.write(`./public/uploads/${req.body.photo}`);
+  // Continuar con el siguiente argumento en router.post('/add', ...)
+  next();
 };
 
 exports.createStore = async (req, res) => {

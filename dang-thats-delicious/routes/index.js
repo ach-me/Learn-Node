@@ -46,12 +46,23 @@ const { catchErrors } = require('../handlers/errorHandlers'); // Object destruct
 // primero realiza el middleware, luego muestra el homepage
 router.get('/', catchErrors(storeController.getStores));
 router.get('/stores', catchErrors(storeController.getStores));
+router.get('/stores/:id/edit', catchErrors(storeController.editStore));
 router.get('/add', storeController.addStore);
 
 // Cuando se envia por POST en la siguiente direccion
 // Agregar el store
-router.post('/add', catchErrors(storeController.createStore));
-router.post('/add/:id', catchErrors(storeController.updateStore));
-router.get('/stores/:id/edit', catchErrors(storeController.editStore));
+router.post(
+  '/add',
+  storeController.upload,
+  catchErrors(storeController.resize),
+  catchErrors(storeController.createStore)
+);
+
+router.post(
+  '/add/:id',
+  storeController.upload,
+  catchErrors(storeController.resize),
+  catchErrors(storeController.updateStore)
+);
 
 module.exports = router;
