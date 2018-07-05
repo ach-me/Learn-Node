@@ -73,5 +73,17 @@ storeSchema.pre('save', async function(next) {
   next();
 });
 
+// Agregar método propio
+// Estos metodos estaran ligados al modelo
+storeSchema.statics.getTagsList = function() {
+  // "aggregate" tomara una array de operadores posibles de lo que se este buscando
+  return this.aggregate([
+    // con '$tags' se indica que es un campo del documento que se quiere
+    { $unwind: '$tags' },
+    { $group: { _id: '$tags', count: { $sum: 1 } } },
+    { $sort: { count: -1 } },
+  ]);
+};
+
 // Si lo que se importara es lo principal
 module.exports = mongoose.model('Store', storeSchema);

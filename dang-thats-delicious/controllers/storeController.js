@@ -166,3 +166,11 @@ exports.getStoreBySlug = async (req, res, next) => {
   // En este caso se ejecutará "app.use(errorHandlers.notFound)"
   res.render('store', { store, title: store.name });
 };
+
+exports.getStoresByTag = async (req, res, next) => {
+  // Get a list of all the stores
+  // Se pueden crear metodos propios para usar en los schema
+  const tags = await Store.getTagsList();
+  const { tag } = req.params;
+  res.render('tag', { tags, title: 'Tags', tag });
+};
