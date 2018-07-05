@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const storeController = require('../controllers/storeController');
+const userController = require('../controllers/userController');
 const { catchErrors } = require('../handlers/errorHandlers'); // Object destructuring. Importa solo el metodo de igual nombre
 
 // Formas de acceder a los datos de la URL
@@ -69,5 +70,17 @@ router.get('/store/:slug', catchErrors(storeController.getStoreBySlug));
 
 router.get('/tags', catchErrors(storeController.getStoresByTag));
 router.get('/tags/:tag', catchErrors(storeController.getStoresByTag));
+
+router.get('/login', userController.loginForm);
+router.get('/register', userController.registerForm);
+router.post(
+  '/register',
+  // 1. Validate registration data
+  userController.validateRegister
+
+  // 2. Register de user
+
+  // 3. Log them in
+);
 
 module.exports = router;

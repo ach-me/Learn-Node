@@ -171,6 +171,7 @@ exports.getStoresByTag = async (req, res, next) => {
   const { tag } = req.params;
 
   // Si no hay tag elegido, devolver todos los stores que tengan al menos un tag
+  // "$exists: true" significa si existe al menos un valor en la propiedad tag
   const tagQuery = tag || { $exists: true };
 
   // Get a list of all the stores
