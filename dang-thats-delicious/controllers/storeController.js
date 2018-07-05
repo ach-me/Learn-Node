@@ -168,9 +168,19 @@ exports.getStoreBySlug = async (req, res, next) => {
 };
 
 exports.getStoresByTag = async (req, res, next) => {
+  const { tag } = req.params;
+
+  // Si no hay tag elegido, devolver todos los stores que tengan al menos un tag
+  const tagQuery = tag || { $exists: true };
+
   // Get a list of all the stores
   // Se pueden crear metodos propios para usar en los schema
-  const tags = await Store.getTagsList();
-  const { tag } = req.params;
-  res.render('tag', { tags, title: 'Tags', tag });
+  const tagsPromise = Store.getTagsList();
+  // Encontrar los stores que contengan esos tags
+  const storesPromise = Store.find({ tags: tagQuery });
+
+  // Esperar a que las dos promesas retornen
+  const [tags, stores] = await Promise.all([tagsPromise, storesPromise]);
+
+  res.render('tag', { tags, title: 'Tags', tag, stores });
 };
