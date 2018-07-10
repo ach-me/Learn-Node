@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+// Se puede definir de esta manera porque ya se ha importado en "app.js"
+const User = mongoose.model('User');
+
+const promisify = require('es6-promisify');
+
 exports.loginForm = (req, res) => {
   res.render('login', { title: 'Login' });
 };
@@ -37,4 +42,22 @@ exports.validateRegister = (req, res, next) => {
     return; // stop fn from running
   }
   next(); // there were no errors
+};
+
+exports.register = async (req, res, next) => {
+  // Create the user
+  // en este momento se dispone de todos los datos enviados por el formulario en "req.body"
+  const user = new User({ email: req.body.email, name: req.body.name });
+
+  // "register()" esta disponible al usar el plugin "passportLocalMongoose" definido en el modelo "User.js"
+  // este metodo se encargara directamente de los pasos de registro
+  // como este paquete (passport-local-mongoose) no usa promesas, hay que pasarle una funcion callback como 3er parametro
+  // User.register(user, req.body.password, function(err, user) {});
+  // Para poder utilizarlo como promesa, se usa el paquete "es6-promisify" que permitirá simular asincronismo
+
+  const register = promisify(User.register, User);
+
+  // El password ya se guarda hasheada
+  await register(user, req.body.password);
+  next(); // pass to authController login
 };

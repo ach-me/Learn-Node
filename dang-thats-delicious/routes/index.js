@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const storeController = require('../controllers/storeController');
 const userController = require('../controllers/userController');
+const authController = require('../controllers/authController');
 const { catchErrors } = require('../handlers/errorHandlers'); // Object destructuring. Importa solo el metodo de igual nombre
 
 // Formas de acceder a los datos de la URL
@@ -76,11 +77,13 @@ router.get('/register', userController.registerForm);
 router.post(
   '/register',
   // 1. Validate registration data
-  userController.validateRegister
+  userController.validateRegister,
 
-  // 2. Register de user
+  // 2. Register/save the user
+  userController.register,
 
   // 3. Log them in
+  authController.login
 );
 
 module.exports = router;
