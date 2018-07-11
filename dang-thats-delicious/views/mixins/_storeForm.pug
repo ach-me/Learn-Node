@@ -6,7 +6,7 @@ mixin storeForm(store = {})
 
   //- enctype="multipart-/form-data" permite enviar archivos en el formulario
   form(action=`/add/${store._id || ''}` method="POST" class="card" enctype="multipart/form-data")
-    pre= h.dump(store)
+    //- pre= h.dump(store)
     //- los atributos "name" deben coincidir con los definidos en el schema definido en "/models/Store.js"
     label(for="name") Name
     input(type="text" name="name" value=store.name)
