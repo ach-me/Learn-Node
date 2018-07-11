@@ -33,6 +33,7 @@ html
                 != h.icon('logout')
                 span Logout
               li.nav__item: a.nav__link(href="/account", class=(currentPath.startsWith('/account') ? 'nav__link--active' : ''))
+                //- "gravatar" es el avatar del usuario. Cada vez que se disponga del email del usuario, se puede relacionar el avatar
                 img.avatar(src=user.gravatar + '&d=retro')
             else
               li.nav__item: a.nav__link(href="/register", class=(currentPath.startsWith('/register') ? 'nav__link--active' : '')) Register

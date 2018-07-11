@@ -49,7 +49,9 @@ const { catchErrors } = require('../handlers/errorHandlers'); // Object destruct
 router.get('/', catchErrors(storeController.getStores));
 router.get('/stores', catchErrors(storeController.getStores));
 router.get('/stores/:id/edit', catchErrors(storeController.editStore));
-router.get('/add', storeController.addStore);
+
+// Antes de mostrar el formulario de agregar store, verificar si esta logueado a traves del middleware predefinido
+router.get('/add', authController.isLoggedIn, storeController.addStore);
 
 // Cuando se envia por POST en la siguiente direccion
 // Agregar el store
@@ -73,6 +75,8 @@ router.get('/tags', catchErrors(storeController.getStoresByTag));
 router.get('/tags/:tag', catchErrors(storeController.getStoresByTag));
 
 router.get('/login', userController.loginForm);
+router.post('/login', authController.login);
+
 router.get('/register', userController.registerForm);
 router.post(
   '/register',
@@ -85,5 +89,7 @@ router.post(
   // 3. Log them in
   authController.login
 );
+
+router.get('/logout', authController.logout)
 
 module.exports = router;
