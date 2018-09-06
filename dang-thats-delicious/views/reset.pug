@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  .inner
+    //- Si el form no tiene "action" defino, por default ira al url actual
+    form.form(method="POST")
+      h2 Reset your password
+      label(for="password") Password
+      input(type="password" name="password")
+      label(for="password-confirm") Confirm password
+      input(type="password" name="password-confirm")
+      input(type="submit" value="Reset password ->")
+
+
