@@ -81,6 +81,7 @@ exports.resize = async (req, res, next) => {
 };
 
 exports.createStore = async (req, res) => {
+  req.body.author = req.user._id;
   // "req.body" contiene toda la informacion enviada
   // en el formulario
   // res.json(req.body);
@@ -123,14 +124,19 @@ exports.getStores = async (req, res) => {
   res.render('stores', { title: 'Stores', stores });
 };
 
+const confirmOwner = (store, user) => {
+  // Para comparar un objeto (ObjectId) con un string es necesario usar el metodo "equals"
+  if (!store.author.equals(user._id)) {
+    throw Error('You must be the owner the store in order to edit it!');
+  }
+};
+
 exports.editStore = async (req, res) => {
   // 1. Find the store given the ID
   const store = await Store.findOne({ _id: req.params.id });
 
   // 2. Confirm the user is the owner of the store
-  /**
-   * TODO
-   */
+  confirmOwner(store, req.user);
 
   // 3. Render out the edit form so the user can update their store
   res.render('editStore', { title: 'Edit Store', store });
@@ -159,7 +165,8 @@ exports.updateStore = async (req, res) => {
 
 exports.getStoreBySlug = async (req, res, next) => {
   // Query the db for the requested store
-  const store = await Store.findOne({ slug: req.params.slug });
+  // "populate" permite traer todos los datos relacionados con el campo especificado. El campo "author" contiene el ID del autor, entonces de esta forma estaran todos los campos disponibles que tenga el autor
+  const store = await Store.findOne({ slug: req.params.slug }).populate('author');
   // Si la query no encuentra nada, retorna "null"
   if (!store) return next();
   // "next" hara que se ejecute lo siguiente a "app.use('/', routes)" declara en "app.js"
