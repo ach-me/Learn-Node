@@ -51,6 +51,14 @@ const storeSchema = new mongoose.Schema({
   },
 });
 
+// Define our indexes (tema de MongoDB)
+// Agregar index. Se indica qué campos del schema queremos que se indexen
+// Esto permitira buscar datos en estos campos de manera mas eficiente
+storeSchema.index({
+  name: 'text',
+  description: 'text',
+});
+
 // Antes de guardar el store
 storeSchema.pre('save', async function(next) {
   // se usa sintaxis "function()" para poder acceder a "this"

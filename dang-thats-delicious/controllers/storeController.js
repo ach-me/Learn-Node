@@ -158,7 +158,9 @@ exports.updateStore = async (req, res) => {
   // 2. Redirect them the store and tell it worked
   req.flash(
     'success',
-    `Successfully updated <strong>${store.name}</strong>. <a href="/stores/${store.slug}">View Store -></a>`
+    `Successfully updated <strong>${store.name}</strong>. <a href="/stores/${
+      store.slug
+    }">View Store -></a>`
   );
   res.redirect(`/stores/${store._id}/edit`);
 };
@@ -191,4 +193,28 @@ exports.getStoresByTag = async (req, res, next) => {
   const [tags, stores] = await Promise.all([tagsPromise, storesPromise]);
 
   res.render('tag', { tags, title: 'Tags', tag, stores });
+};
+
+exports.searchStores = async (req, res) => {
+  // MongoDB: $text performs a text search on the content of the fields indexed with a text index
+  const stores = await Store
+    // find stores that match
+    .find(
+      {
+        $text: {
+          $search: req.query.q,
+        },
+      },
+      {
+        score: { $meta: 'textScore' },
+      }
+    )
+    // sort them by relevance
+    .sort({
+      score: { $meta: 'textScore' },
+    })
+    // limit to only 5 results
+    .limit(5);
+
+  res.json(stores);
 };
