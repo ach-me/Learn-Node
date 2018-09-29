@@ -59,6 +59,11 @@ storeSchema.index({
   description: 'text',
 });
 
+// Geospacial data
+storeSchema.index({
+  location: '2dsphere'
+})
+
 // Antes de guardar el store
 storeSchema.pre('save', async function(next) {
   // se usa sintaxis "function()" para poder acceder a "this"

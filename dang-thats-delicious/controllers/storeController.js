@@ -218,3 +218,23 @@ exports.searchStores = async (req, res) => {
 
   res.json(stores);
 };
+
+exports.mapStores = async (req, res) => {
+  const coordinates = [req.query.lng, req.query.lat].map(parseFloat);
+  const q = {
+    location: {
+      // $near es un operador de MongoDB que permite buscar ubicaciones cercanas
+      $near: {
+        $geometry: {
+          type: 'Point',
+          coordinates,
+        },
+        $maxDistance: 10000 // 10 km
+      }
+    }
+  }
+
+  // Solo traer ciertos campos de la base de datos con 'select'
+  const stores = await Store.find(q).select('slug name description location').limit(10);
+  res.json(stores);
+}
