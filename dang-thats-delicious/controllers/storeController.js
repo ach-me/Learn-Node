@@ -235,6 +235,10 @@ exports.mapStores = async (req, res) => {
   }
 
   // Solo traer ciertos campos de la base de datos con 'select'
-  const stores = await Store.find(q).select('slug name description location').limit(10);
+  const stores = await Store.find(q).select('slug photo name description location').limit(10);
   res.json(stores);
+}
+
+exports.mapPage = (req, res) => {
+  res.render('map', { title: 'Map'})
 }
