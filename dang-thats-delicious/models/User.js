@@ -26,6 +26,12 @@ const userSchema = new Schema({
   },
   resetPasswordToken: String,
   resetPasswordExpires: Date,
+  hearts: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Store',
+    },
+  ],
 });
 
 // Virtual field. En mongodb es un campo que puede ser generado sin necesidad de definirlo en el schema, en lugar de tener que guardar en la base de datos

@@ -23,6 +23,7 @@ const Store = mongoose.model('Store');
 // La asignacion 'Store' sale del archivo 'Store.js'
 // module.exports = mongoose.model('Store', storeSchema);
 
+const User = mongoose.model('User');
 // Paquete necesario para el manejo de la transaccion de archivos
 const multer = require('multer');
 
@@ -229,16 +230,32 @@ exports.mapStores = async (req, res) => {
           type: 'Point',
           coordinates,
         },
-        $maxDistance: 10000 // 10 km
-      }
-    }
-  }
+        $maxDistance: 10000, // 10 km
+      },
+    },
+  };
 
   // Solo traer ciertos campos de la base de datos con 'select'
-  const stores = await Store.find(q).select('slug photo name description location').limit(10);
+  const stores = await Store.find(q)
+    .select('slug photo name description location')
+    .limit(10);
   res.json(stores);
-}
+};
 
 exports.mapPage = (req, res) => {
-  res.render('map', { title: 'Map'})
-}
+  res.render('map', { title: 'Map' });
+};
+
+exports.heartStore = async (req, res) => {
+  // We need to know the person hearted stores first
+  const hearts = req.user.hearts.map(obj => obj.toString());
+  // If they already have the store then we must remove it, like a toggle
+  const operator = hearts.includes(req.params.id) ? '$pull' : '$addToSet';
+  // Find the current user and update it
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    { [operator]: { hearts: req.params.id } },
+    { new: true }
+  );
+  res.json(user);
+};
