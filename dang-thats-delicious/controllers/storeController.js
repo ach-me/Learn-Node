@@ -169,7 +169,7 @@ exports.updateStore = async (req, res) => {
 exports.getStoreBySlug = async (req, res, next) => {
   // Query the db for the requested store
   // "populate" permite traer todos los datos relacionados con el campo especificado. El campo "author" contiene el ID del autor, entonces de esta forma estaran todos los campos disponibles que tenga el autor
-  const store = await Store.findOne({ slug: req.params.slug }).populate('author');
+  const store = await Store.findOne({ slug: req.params.slug }).populate('author reviews');
   // Si la query no encuentra nada, retorna "null"
   if (!store) return next();
   // "next" hara que se ejecute lo siguiente a "app.use('/', routes)" declara en "app.js"

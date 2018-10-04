@@ -11,45 +11,52 @@ mongoose.Promise = global.Promise;
 const slug = require('slugs');
 
 // Hacer el schema
-const storeSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    trim: true,
-    required: 'Please enter a store name!',
-  },
-  slug: String,
-  description: {
-    type: String,
-    trim: true,
-  },
-  tags: [String],
-  created: {
-    type: Date,
-    default: Date.now,
-  },
-  location: {
-    type: {
+const storeSchema = new mongoose.Schema(
+  {
+    name: {
       type: String,
-      default: 'Point',
+      trim: true,
+      required: 'Please enter a store name!',
     },
-    coordinates: [
-      {
-        type: Number,
-        required: 'You must supply coordinates!',
+    slug: String,
+    description: {
+      type: String,
+      trim: true,
+    },
+    tags: [String],
+    created: {
+      type: Date,
+      default: Date.now,
+    },
+    location: {
+      type: {
+        type: String,
+        default: 'Point',
       },
-    ],
-    address: {
-      type: String,
-      required: 'You must supply an address!',
+      coordinates: [
+        {
+          type: Number,
+          required: 'You must supply coordinates!',
+        },
+      ],
+      address: {
+        type: String,
+        required: 'You must supply an address!',
+      },
+    },
+    photo: String,
+    author: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: 'You must supply an author.',
     },
   },
-  photo: String,
-  author: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
-    required: 'You must supply an author.',
-  },
-});
+  {
+    // ya que los campos "virtuals" no son incluidos por default en los json u objetos (no esta disponible dentro del objet 'store'), hay que hacerlo explicitamente
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
 
 // Define our indexes (tema de MongoDB)
 // Agregar index. Se indica qué campos del schema queremos que se indexen
@@ -61,8 +68,8 @@ storeSchema.index({
 
 // Geospacial data
 storeSchema.index({
-  location: '2dsphere'
-})
+  location: '2dsphere',
+});
 
 // Antes de guardar el store
 storeSchema.pre('save', async function(next) {
@@ -102,6 +109,14 @@ storeSchema.statics.getTagsList = function() {
     { $sort: { count: -1 } },
   ]);
 };
+
+// finds reviews where the stores _id property === reviews store property
+// es como un JOIN en SQL
+storeSchema.virtual('reviews', {
+  ref: 'Review', // what model to link?
+  localField: '_id', // which field on the store?
+  foreignField: 'store', // which field on the review?
+});
 
 // Si lo que se importara es lo principal
 module.exports = mongoose.model('Store', storeSchema);
