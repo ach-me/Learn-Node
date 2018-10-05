@@ -110,6 +110,52 @@ storeSchema.statics.getTagsList = function() {
   ]);
 };
 
+storeSchema.statics.getTopStores = function() {
+  // aggregate es como find, pero puede hacer queries mas complejas
+  // aggregate retorna una promesa
+  return this.aggregate([
+    // 1- lookup stores and populate their reviews
+    // No puede usarse el virtual definido abajo porque ese es un metodo de mongoose, mientras que aggregate es de mongodb
+    {
+      $lookup: {
+        from: 'reviews',
+        localField: '_id',
+        foreignField: 'store',
+        as: 'reviews',
+      },
+    },
+    // 2- filter for only items that have 2 or more reviews
+    {
+      $match: {
+        // el numero 1 indica el indice del array reviews. O sea, verifica que existan por lo menos dos elementos en el array (2 reviews)
+        'reviews.1': {
+          $exists: true,
+        },
+      },
+    },
+    // 3- add the average reviews field
+    {
+      $addFields: {
+        // Create a new field called "averageRating"
+        averageRating: {
+          // Set its value as the average of each of the reviews rating
+          $avg: '$reviews.rating',
+        },
+      },
+    },
+    // 4- sort it by our new field, hieghest reviews first
+    {
+      $sort: {
+        averageRating: -1,
+      },
+    },
+    // 5- limit to at most 10
+    {
+      $limit: 10,
+    },
+  ]);
+};
+
 // finds reviews where the stores _id property === reviews store property
 // es como un JOIN en SQL
 storeSchema.virtual('reviews', {
@@ -117,6 +163,14 @@ storeSchema.virtual('reviews', {
   localField: '_id', // which field on the store?
   foreignField: 'store', // which field on the review?
 });
+
+function autopopulate(next) {
+  this.populate('reviews');
+  next();
+}
+
+storeSchema.pre('find', autopopulate);
+storeSchema.pre('findOne', autopopulate);
 
 // Si lo que se importara es lo principal
 module.exports = mongoose.model('Store', storeSchema);
