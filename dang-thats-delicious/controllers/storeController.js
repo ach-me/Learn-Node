@@ -119,10 +119,37 @@ exports.createStore = async (req, res) => {
 };
 
 exports.getStores = async (req, res) => {
+  // get current page of stores list
+  const page = req.params.page || 1;
+  const limit = 4;
+  const skip = page * limit - limit;
   // query db for a list of all stores
   // "find()" devuelve una promesa, entonces se espera a que termine con "await"
-  const stores = await Store.find();
-  res.render('stores', { title: 'Stores', stores });
+  const storesPromise = Store.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({ created: 'desc' });
+
+  // Contar cuantos stores hay en la base de datos
+  const countPromise = Store.count();
+
+  // Esperar que retornen las dos promesas
+  const [stores, count] = await Promise.all([storesPromise, countPromise]);
+
+  // Determinar cuantas paginas son necesarias
+  const pages = Math.ceil(count / limit);
+
+  // en el caso en que se coloque a mano un numero de pagina en la url
+  if (!stores.length && skip) {
+    req.flash(
+      'info',
+      `Hey! You asked for page ${page} but it doesn't exist, so I put you on page ${pages}`
+    );
+    res.redirect(`/stores/page/${pages}`);
+    return;
+  }
+
+  res.render('stores', { title: 'Stores', stores, count, page, pages });
 };
 
 const confirmOwner = (store, user) => {

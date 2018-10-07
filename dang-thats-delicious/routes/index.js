@@ -49,6 +49,7 @@ const { catchErrors } = require('../handlers/errorHandlers'); // Object destruct
 // primero realiza el middleware, luego muestra el homepage
 router.get('/', catchErrors(storeController.getStores));
 router.get('/stores', catchErrors(storeController.getStores));
+router.get('/stores/page/:page', catchErrors(storeController.getStores));
 router.get('/stores/:id/edit', catchErrors(storeController.editStore));
 
 // Antes de mostrar el formulario de agregar store, verificar si esta logueado a traves del middleware predefinido
